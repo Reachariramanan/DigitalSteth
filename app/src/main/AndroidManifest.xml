@@ -26,6 +26,10 @@
             </intent-filter>
         </activity>
 
+        <activity
+            android:name="com.example.digistethchai.PreprocessingActivity"
+            android:exported="false" />
+
     </application>
 
 </manifest>

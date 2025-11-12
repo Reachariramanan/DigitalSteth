@@ -37,4 +37,12 @@
         android:max="100"
         android:progress="50" />
 
+    <Button
+        android:id="@+id/settingsButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Settings"
+        android:layout_gravity="center"
+        android:layout_marginTop="16dp" />
+
 </LinearLayout>

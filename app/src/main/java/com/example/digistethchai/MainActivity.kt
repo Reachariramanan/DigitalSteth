@@ -2,9 +2,13 @@ package com.example.digistethchai
 
 import android.Manifest
 import android.annotation.SuppressLint
+import android.content.Context
+import android.content.Intent
+import android.content.SharedPreferences
 import android.content.pm.PackageManager
 import android.media.*
 import android.os.*
+import android.widget.Button
 import android.widget.SeekBar
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -36,6 +40,13 @@ class MainActivity : AppCompatActivity() {
     private val recBufferSize = maxOf(minRec, (sampleRate / 100) * 2)   // ~10ms
     private val trackBufferSize = maxOf(minTrack, (sampleRate / 100) * 2)
 
+    // Preprocessing
+    private lateinit var prefs: SharedPreferences
+    private var bandPassFilter: BandPassFilter? = null
+    private var highPassFilter: HighPassFilter? = null
+    private var noiseReducer: NoiseReducer? = null
+    private var normalizer: Normalizer? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -47,7 +58,11 @@ class MainActivity : AppCompatActivity() {
         audioManager = getSystemService(AUDIO_SERVICE) as AudioManager
         uiHandler = Handler(Looper.getMainLooper())
 
+        prefs = getSharedPreferences("preprocessing_prefs", Context.MODE_PRIVATE)
+        loadPreprocessingSettings()
+
         setupVolumeControls()
+        setupNavigation()
         checkPermissionsAndStart()
     }
 
@@ -72,8 +87,31 @@ class MainActivity : AppCompatActivity() {
             override fun onStartTrackingTouch(seekBar: SeekBar?) {}
             override fun onStopTrackingTouch(seekBar: SeekBar?) {}
         })
+    }
 
+    private fun setupNavigation() {
+        findViewById<Button>(R.id.settingsButton).setOnClickListener {
+            startActivity(Intent(this, PreprocessingActivity::class.java))
+        }
+    }
 
+    private fun loadPreprocessingSettings() {
+        if (prefs.getBoolean("bandPassEnabled", false)) {
+            val low = prefs.getInt("bandPassLow", 20)
+            val high = prefs.getInt("bandPassHigh", 2000)
+            bandPassFilter = BandPassFilter(sampleRate, low, high)
+        }
+        if (prefs.getBoolean("highPassEnabled", false)) {
+            val cutoff = prefs.getInt("highPassCutoff", 20)
+            highPassFilter = HighPassFilter(sampleRate, cutoff)
+        }
+        if (prefs.getBoolean("noiseReductionEnabled", false)) {
+            val strength = prefs.getInt("noiseReductionStrength", 50)
+            noiseReducer = NoiseReducer(sampleRate, strength)
+        }
+        if (prefs.getBoolean("normalizationEnabled", false)) {
+            normalizer = Normalizer()
+        }
     }
 
     private fun checkPermissionsAndStart() {
@@ -162,6 +200,16 @@ class MainActivity : AppCompatActivity() {
                 for (i in 0 until read) {
                     val scaled = (buffer[i] * micGain).toInt()
                     buffer[i] = scaled.coerceIn(-32768, 32767).toShort()
+                }
+
+                // Apply preprocessing filters
+                for (i in 0 until read) {
+                    var sample = buffer[i]
+                    bandPassFilter?.let { sample = it.process(sample) }
+                    highPassFilter?.let { sample = it.process(sample) }
+                    noiseReducer?.let { sample = it.process(sample) }
+                    normalizer?.let { sample = it.process(sample) }
+                    buffer[i] = sample
                 }
 
                 amplitudeUpdateCounter++
