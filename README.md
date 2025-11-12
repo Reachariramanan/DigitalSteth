@@ -1,5 +1,7 @@
 # Digital Stethoscope
 
+(DIY) Digital Stethoscope - App For the world. Made in INDIA
+
 A minimal, professional digital stethoscope application built with Flutter, featuring real-time audio recording, playback, and phonocardiogram visualization.
 
 ## Features
@@ -28,24 +30,6 @@ A minimal, professional digital stethoscope application built with Flutter, feat
 - Large, easy-to-press buttons
 - Medical-grade professional aesthetics
 
-## Screenshots
-
-### Main Selection Screen
-- Choose between Bluetooth and Wired stethoscope modes
-- Large, clearly labeled buttons
-- Minimal, distraction-free design
-
-### Audio Interface
-- Record button with visual recording indicator
-- Playback controls with progress bar
-- Feedback button for phonocardiogram
-- Real-time status updates
-
-### Phonocardiogram Visualization
-- Live waveform chart during feedback playback
-- Proper scaling and grid lines
-- Medical chart formatting
-
 ## Getting Started
 
 ### Prerequisites
@@ -57,7 +41,7 @@ A minimal, professional digital stethoscope application built with Flutter, feat
 
 1. **Clone the repository**
    ```bash
-   git clone <repository-url>
+   git clone https://github.com/Reachariramanan/DigitalSteth.git
    cd digitalsteth
    ```
 
@@ -115,41 +99,6 @@ These permissions are automatically requested when the app starts.
 - **Bitrate**: 128 kbps
 - **Sample Rate**: 44.1 kHz
 - **File Extension**: .m4a
-
-### Chart Specifications
-- **Update Rate**: 50ms (20 FPS)
-- **Data Points**: 200 (rolling window)
-- **Y-Axis Range**: -1.2 to +1.2
-- **Grid Intervals**: 0.5 (horizontal), 10 (vertical)
-
-## Architecture
-
-### File Structure
-```
-lib/
-├── main.dart          # App entry point and main selection screen
-└── audio_screen.dart  # Audio recording/playback interface
-
-android/
-└── app/src/main/
-    └── AndroidManifest.xml  # Permissions configuration
-```
-
-### State Management
-- Local state management within screen widgets
-- Audio player and recorder lifecycle management
-- Real-time chart data updates
-
-### Audio Flow
-1. **Recording**: Device microphone → Audio file
-2. **Playback**: Audio file → Device speaker
-3. **Feedback**: Audio file → Chart visualization + Output routing
-
-## Platform Support
-
-- **Android**: Full support with audio permissions
-- **iOS**: Compatible (permissions may vary)
-- **Web**: Limited (no microphone access)
 
 ## Contributing
 
