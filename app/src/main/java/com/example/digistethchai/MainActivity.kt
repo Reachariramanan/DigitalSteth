@@ -47,6 +47,8 @@ class MainActivity : AppCompatActivity() {
     private var noiseReducer: NoiseReducer? = null
     private var normalizer: Normalizer? = null
 
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -114,6 +116,8 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+
+
     private fun checkPermissionsAndStart() {
         val permissions = arrayOf(
             Manifest.permission.RECORD_AUDIO,
@@ -139,12 +143,18 @@ class MainActivity : AppCompatActivity() {
     @SuppressLint("MissingPermission")
     private fun startAudioProcessing() {
         try {
-            audioManager.mode = AudioManager.MODE_IN_COMMUNICATION
-            audioManager.startBluetoothSco()
-            audioManager.isBluetoothScoOn = true
+            // Do NOT start SCO or set global comm mode for split routing
+            audioManager.mode = AudioManager.MODE_NORMAL
+            audioManager.isSpeakerphoneOn = false
+
+            // Find BT SCO input and phone earpiece output devices
+            val inBt = audioManager.getDevices(AudioManager.GET_DEVICES_INPUTS)
+                .firstOrNull { it.type == AudioDeviceInfo.TYPE_BLUETOOTH_SCO }
+            val outEarpiece = audioManager.getDevices(AudioManager.GET_DEVICES_OUTPUTS)
+                .firstOrNull { it.type == AudioDeviceInfo.TYPE_BUILTIN_EARPIECE }
 
             audioRecord = AudioRecord.Builder()
-                .setAudioSource(MediaRecorder.AudioSource.VOICE_COMMUNICATION)
+                .setAudioSource(MediaRecorder.AudioSource.MIC) // source ignored if device pinned
                 .setAudioFormat(
                     AudioFormat.Builder()
                         .setEncoding(audioFormat)
@@ -154,6 +164,8 @@ class MainActivity : AppCompatActivity() {
                 )
                 .setBufferSizeInBytes(recBufferSize)
                 .build()
+            // Pin to BT SCO input if available
+            inBt?.let { audioRecord?.preferredDevice = it }
 
             val audioAttributes = AudioAttributes.Builder()
                 .setUsage(AudioAttributes.USAGE_VOICE_COMMUNICATION)
@@ -172,6 +184,8 @@ class MainActivity : AppCompatActivity() {
                 .setBufferSizeInBytes(trackBufferSize)
                 .setTransferMode(AudioTrack.MODE_STREAM)
                 .build()
+            // Pin to phone earpiece output if available
+            outEarpiece?.let { audioTrack?.preferredDevice = it }
 
             audioRecord?.startRecording()
             audioTrack?.play()
@@ -240,7 +254,7 @@ class MainActivity : AppCompatActivity() {
         audioRecord?.release(); audioRecord = null
         try { audioTrack?.stop() } catch (_: Exception) {}
         audioTrack?.release(); audioTrack = null
-        try { audioManager.stopBluetoothSco() } catch (_: Exception) {}
+        audioManager.mode = AudioManager.MODE_NORMAL
         audioManager.isBluetoothScoOn = false
         audioManager.mode = AudioManager.MODE_NORMAL
     }

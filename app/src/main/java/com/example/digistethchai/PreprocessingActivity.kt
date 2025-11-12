@@ -14,12 +14,16 @@ class PreprocessingActivity : AppCompatActivity() {
     private lateinit var bandPassSwitch: Switch
     private lateinit var bandPassLowSeekBar: SeekBar
     private lateinit var bandPassHighSeekBar: SeekBar
+    private lateinit var bandPassLowValue: android.widget.TextView
+    private lateinit var bandPassHighValue: android.widget.TextView
 
     private lateinit var noiseReductionSwitch: Switch
     private lateinit var noiseReductionSeekBar: SeekBar
+    private lateinit var noiseReductionValue: android.widget.TextView
 
     private lateinit var highPassSwitch: Switch
     private lateinit var highPassSeekBar: SeekBar
+    private lateinit var highPassValue: android.widget.TextView
 
     private lateinit var normalizationSwitch: Switch
 
@@ -38,26 +42,39 @@ class PreprocessingActivity : AppCompatActivity() {
         bandPassSwitch = findViewById(R.id.bandPassSwitch)
         bandPassLowSeekBar = findViewById(R.id.bandPassLowSeekBar)
         bandPassHighSeekBar = findViewById(R.id.bandPassHighSeekBar)
+        bandPassLowValue = findViewById(R.id.bandPassLowValue)
+        bandPassHighValue = findViewById(R.id.bandPassHighValue)
 
         noiseReductionSwitch = findViewById(R.id.noiseReductionSwitch)
         noiseReductionSeekBar = findViewById(R.id.noiseReductionSeekBar)
+        noiseReductionValue = findViewById(R.id.noiseReductionValue)
 
         highPassSwitch = findViewById(R.id.highPassSwitch)
         highPassSeekBar = findViewById(R.id.highPassSeekBar)
+        highPassValue = findViewById(R.id.highPassValue)
 
         normalizationSwitch = findViewById(R.id.normalizationSwitch)
     }
 
     private fun loadSettings() {
         bandPassSwitch.isChecked = prefs.getBoolean("bandPassEnabled", false)
-        bandPassLowSeekBar.progress = prefs.getInt("bandPassLow", 20)
-        bandPassHighSeekBar.progress = prefs.getInt("bandPassHigh", 2000)
+        val low = prefs.getInt("bandPassLow", 20)
+        bandPassLowSeekBar.progress = low - 20
+        bandPassLowValue.text = low.toString()
+
+        val high = prefs.getInt("bandPassHigh", 2000)
+        bandPassHighSeekBar.progress = high - 500
+        bandPassHighValue.text = high.toString()
 
         noiseReductionSwitch.isChecked = prefs.getBoolean("noiseReductionEnabled", false)
-        noiseReductionSeekBar.progress = prefs.getInt("noiseReductionStrength", 50)
+        val strength = prefs.getInt("noiseReductionStrength", 50)
+        noiseReductionSeekBar.progress = strength
+        noiseReductionValue.text = strength.toString()
 
         highPassSwitch.isChecked = prefs.getBoolean("highPassEnabled", false)
-        highPassSeekBar.progress = prefs.getInt("highPassCutoff", 20)
+        val cutoff = prefs.getInt("highPassCutoff", 20)
+        highPassSeekBar.progress = cutoff - 10
+        highPassValue.text = cutoff.toString()
 
         normalizationSwitch.isChecked = prefs.getBoolean("normalizationEnabled", false)
     }
@@ -68,14 +85,18 @@ class PreprocessingActivity : AppCompatActivity() {
         }
         bandPassLowSeekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
-                prefs.edit().putInt("bandPassLow", progress + 20).apply() // 20-520
+                val value = progress + 20
+                bandPassLowValue.text = value.toString()
+                prefs.edit().putInt("bandPassLow", value).apply()
             }
             override fun onStartTrackingTouch(seekBar: SeekBar?) {}
             override fun onStopTrackingTouch(seekBar: SeekBar?) {}
         })
         bandPassHighSeekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
-                prefs.edit().putInt("bandPassHigh", progress + 500).apply() // 500-4500
+                val value = progress + 500
+                bandPassHighValue.text = value.toString()
+                prefs.edit().putInt("bandPassHigh", value).apply()
             }
             override fun onStartTrackingTouch(seekBar: SeekBar?) {}
             override fun onStopTrackingTouch(seekBar: SeekBar?) {}
@@ -86,6 +107,7 @@ class PreprocessingActivity : AppCompatActivity() {
         }
         noiseReductionSeekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
+                noiseReductionValue.text = progress.toString()
                 prefs.edit().putInt("noiseReductionStrength", progress).apply()
             }
             override fun onStartTrackingTouch(seekBar: SeekBar?) {}
@@ -97,7 +119,9 @@ class PreprocessingActivity : AppCompatActivity() {
         }
         highPassSeekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
-                prefs.edit().putInt("highPassCutoff", progress + 10).apply() // 10-110
+                val value = progress + 10
+                highPassValue.text = value.toString()
+                prefs.edit().putInt("highPassCutoff", value).apply()
             }
             override fun onStartTrackingTouch(seekBar: SeekBar?) {}
             override fun onStopTrackingTouch(seekBar: SeekBar?) {}

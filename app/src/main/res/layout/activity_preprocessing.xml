@@ -46,12 +46,28 @@
 
             </LinearLayout>
 
-            <TextView
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Low Cutoff (Hz)"
-                android:textColor="#CCCCCC"
-                android:layout_marginTop="8dp" />
+                android:orientation="horizontal"
+                android:layout_marginTop="8dp">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Low Cutoff (Hz)"
+                    android:textColor="#CCCCCC" />
+
+                <TextView
+                    android:id="@+id/bandPassLowValue"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="20"
+                    android:textColor="#FFFFFF"
+                    android:textSize="16sp" />
+
+            </LinearLayout>
 
             <SeekBar
                 android:id="@+id/bandPassLowSeekBar"
@@ -60,12 +76,28 @@
                 android:max="500"
                 android:progress="0" />
 
-            <TextView
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="High Cutoff (Hz)"
-                android:textColor="#CCCCCC"
-                android:layout_marginTop="8dp" />
+                android:orientation="horizontal"
+                android:layout_marginTop="8dp">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="High Cutoff (Hz)"
+                    android:textColor="#CCCCCC" />
+
+                <TextView
+                    android:id="@+id/bandPassHighValue"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="2000"
+                    android:textColor="#FFFFFF"
+                    android:textSize="16sp" />
+
+            </LinearLayout>
 
             <SeekBar
                 android:id="@+id/bandPassHighSeekBar"
@@ -104,12 +136,28 @@
 
             </LinearLayout>
 
-            <TextView
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Strength (%)"
-                android:textColor="#CCCCCC"
-                android:layout_marginTop="8dp" />
+                android:orientation="horizontal"
+                android:layout_marginTop="8dp">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Strength (%)"
+                    android:textColor="#CCCCCC" />
+
+                <TextView
+                    android:id="@+id/noiseReductionValue"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="50"
+                    android:textColor="#FFFFFF"
+                    android:textSize="16sp" />
+
+            </LinearLayout>
 
             <SeekBar
                 android:id="@+id/noiseReductionSeekBar"
@@ -148,12 +196,28 @@
 
             </LinearLayout>
 
-            <TextView
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Cutoff (Hz)"
-                android:textColor="#CCCCCC"
-                android:layout_marginTop="8dp" />
+                android:orientation="horizontal"
+                android:layout_marginTop="8dp">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Cutoff (Hz)"
+                    android:textColor="#CCCCCC" />
+
+                <TextView
+                    android:id="@+id/highPassValue"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="30"
+                    android:textColor="#FFFFFF"
+                    android:textSize="16sp" />
+
+            </LinearLayout>
 
             <SeekBar
                 android:id="@+id/highPassSeekBar"
