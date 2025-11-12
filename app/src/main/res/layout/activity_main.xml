@@ -1,120 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="#000000"
-    android:padding="16dp">
+    android:padding="16dp"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
     <com.example.digistethchai.VisualizerView
         android:id="@+id/visualizerView"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:background="#000000" />
+        android:layout_height="120dp"
+        android:background="#202124" />
 
-    <LinearLayout
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Mic gain"
+        android:layout_marginTop="16dp" />
+
+    <SeekBar
+        android:id="@+id/micVolumeSeekBar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="center"
-        android:layout_marginTop="16dp">
+        android:max="100"
+        android:progress="50" />  <!-- 1.0x gain by default -->
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Mic:"
-            android:textColor="#FFFFFF"
-            android:textSize="16sp" />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Speaker volume"
+        android:layout_marginTop="16dp" />
 
-        <SeekBar
-            android:id="@+id/micVolumeSeekBar"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:max="100"
-            android:progress="50"
-            android:layout_marginStart="8dp"
-            android:layout_marginEnd="16dp" />
-
-        <Button
-            android:id="@+id/micPresetLow"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Low"
-            android:textColor="#FFFFFF"
-            android:background="#333333" />
-
-        <Button
-            android:id="@+id/micPresetMed"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Med"
-            android:textColor="#FFFFFF"
-            android:background="#333333"
-            android:layout_marginStart="8dp" />
-
-        <Button
-            android:id="@+id/micPresetHigh"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="High"
-            android:textColor="#FFFFFF"
-            android:background="#333333"
-            android:layout_marginStart="8dp" />
-
-    </LinearLayout>
-
-    <LinearLayout
+    <SeekBar
+        android:id="@+id/speakerVolumeSeekBar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="center"
-        android:layout_marginTop="8dp">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Spk:"
-            android:textColor="#FFFFFF"
-            android:textSize="16sp" />
-
-        <SeekBar
-            android:id="@+id/speakerVolumeSeekBar"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:max="100"
-            android:progress="50"
-            android:layout_marginStart="8dp"
-            android:layout_marginEnd="16dp" />
-
-        <Button
-            android:id="@+id/speakerPresetLow"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Low"
-            android:textColor="#FFFFFF"
-            android:background="#333333" />
-
-        <Button
-            android:id="@+id/speakerPresetMed"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Med"
-            android:textColor="#FFFFFF"
-            android:background="#333333"
-            android:layout_marginStart="8dp" />
-
-        <Button
-            android:id="@+id/speakerPresetHigh"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="High"
-            android:textColor="#FFFFFF"
-            android:background="#333333"
-            android:layout_marginStart="8dp" />
-
-    </LinearLayout>
+        android:max="100"
+        android:progress="50" />
 
 </LinearLayout>
