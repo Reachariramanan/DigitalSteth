@@ -35,6 +35,7 @@ class _HeartRecorderScreenState extends State<HeartRecorderScreen> {
   StreamSubscription? _recorderSubscription;
   StreamSubscription? _playerSubscription;
   static const platform = MethodChannel('com.example.simpleheartrecorder/audio');
+  Timer? _uiUpdateTimer;
 
   bool _isRecording = false;
   bool _isMonitoring = false;
@@ -58,6 +59,7 @@ class _HeartRecorderScreenState extends State<HeartRecorderScreen> {
 
   @override
   void dispose() {
+    _uiUpdateTimer?.cancel();
     _recorderSubscription?.cancel();
     _playerSubscription?.cancel();
     _recorder?.closeRecorder();
@@ -126,6 +128,7 @@ class _HeartRecorderScreenState extends State<HeartRecorderScreen> {
     if (_player == null || _recorder == null) return;
 
     if (_isMonitoring) {
+      _uiUpdateTimer?.cancel();
       await _player!.stopPlayer();
       await _recorder!.stopRecorder();
       _recorderSubscription?.cancel();
@@ -141,12 +144,12 @@ class _HeartRecorderScreenState extends State<HeartRecorderScreen> {
       // Start recording to stream for live waveform
       final recordingDataController = StreamController<Uint8List>();
       _recorderSubscription = recordingDataController.stream.listen((data) {
+        // Just collect samples, don't update UI here
         final int16Data = Int16List.view(data.buffer);
         for (int i = 0; i < int16Data.length && sampleIndex < maxLiveSamples; i++) {
           _liveSamples![sampleIndex] = int16Data[i];
           sampleIndex = (sampleIndex + 1) % maxLiveSamples;
         }
-        setState(() {}); // Update UI with new samples
       });
 
       await _recorder!.startRecorder(
@@ -161,6 +164,13 @@ class _HeartRecorderScreenState extends State<HeartRecorderScreen> {
         sampleRate: sampleRate,
         numChannels: 1,
       );
+
+      // Start UI update timer (30 FPS)
+      _uiUpdateTimer = Timer.periodic(const Duration(milliseconds: 33), (timer) {
+        if (mounted && _isMonitoring) {
+          setState(() {});
+        }
+      });
 
       setState(() {
         _isMonitoring = true;
