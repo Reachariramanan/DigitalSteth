@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:io';
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_sound/flutter_sound.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -33,6 +34,7 @@ class _HeartRecorderScreenState extends State<HeartRecorderScreen> {
   FlutterSoundPlayer? _player;
   StreamSubscription? _recorderSubscription;
   StreamSubscription? _playerSubscription;
+  static const platform = MethodChannel('com.example.simpleheartrecorder/audio');
 
   bool _isRecording = false;
   bool _isMonitoring = false;
@@ -166,10 +168,17 @@ class _HeartRecorderScreenState extends State<HeartRecorderScreen> {
     }
   }
 
-  void _toggleEarpiece() {
-    setState(() {
-      _earpieceEnabled = !_earpieceEnabled;
-    });
+  Future<void> _toggleEarpiece() async {
+    try {
+      final bool result = await platform.invokeMethod('setEarpieceMode', {
+        'enabled': !_earpieceEnabled,
+      });
+      setState(() {
+        _earpieceEnabled = !_earpieceEnabled;
+      });
+    } on PlatformException catch (e) {
+      print("Failed to set earpiece mode: '${e.message}'.");
+    }
   }
 
   @override
